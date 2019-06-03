@@ -1,7 +1,7 @@
 const express = require('express');
 const createError = require('http-errors');
 const User = require(`../models/user`);
-authenticationMiddleware = require(`../middleware/authentication`);
+authenticationMiddleware = require(`../middleware/middleware-user`);
 const router = express.Router();
 // base /users
 
