@@ -38,3 +38,6 @@ promotionSchema.options.toJSON.transform = function (doc, ret, options) {
 promotionSchema.pre('save', async function () {
     const promotion = this;
 });
+
+const promotion = mongoose.model('promotion', promotionSchema);
+module.exports = promotion;
