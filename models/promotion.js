@@ -2,10 +2,22 @@ const mongoose = require("mongoose");
 const createError = require("http-errors");
 
 const promotionSchema = new mongoose.Schema({
-    resPromotion: { type: Array },
-    foodPromotion: { type: Array },
-    topratedRes: { type: Array },
-    topratedFood: { type: Array },
+    resPromotion: {
+        type: Array, required: false,
+        validate: (input) => input.length < 5 && input.every(v => validator.isMongoId(v))
+    },
+    foodPromotion: {
+        type: Array, required: false,
+        validate: (input) => input.length < 5 && input.every(v => validator.isMongoId(v))
+    },
+    topratedRes: {
+        type: Array, required: true,
+        validate: (input) => input.length < 5 && input.every(v => validator.isMongoId(v))
+    },
+    topratedFood: {
+        type: Array, required: true,
+        validate: (input) => input.length < 5 && input.every(v => validator.isMongoId(v))
+    },
 }, {
         toJSON: {
             hidden: ['__v'],
@@ -13,7 +25,7 @@ const promotionSchema = new mongoose.Schema({
         }
     }
 );
-schema.options.toJSON.transform = function (doc, ret, options) {
+promotionSchema.options.toJSON.transform = function (doc, ret, options) {
     try {
         if (Array.isArray(options.hidden)) {
             options.hidden.forEach((prop) => { delete ret[prop]; });
@@ -23,3 +35,6 @@ schema.options.toJSON.transform = function (doc, ret, options) {
     }
     return ret;
 }
+promotionSchema.pre('save', async function () {
+    const promotion = this;
+});

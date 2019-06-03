@@ -12,6 +12,7 @@ var logger = require('morgan');
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
 var restaurantRouter = require('./routes/restaurant');
+var promotionRouter = require('./routes/promotion');
 
 var app = express();
 
@@ -27,6 +28,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
 app.use('/restaurant', restaurantRouter);
+app.use('/promotion', promotionRouter);
 
 // error display
 app.use((err, req, res, next) => {
