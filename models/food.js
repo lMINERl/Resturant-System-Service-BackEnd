@@ -20,7 +20,7 @@ const foodSchema = new mongoose.Schema({
         }
     }
 );
-schema.options.toJSON.transform = function (doc, ret, options) {
+foodSchema.options.toJSON.transform = function (doc, ret, options) {
     try {
         if (Array.isArray(options.hidden)) {
             options.hidden.forEach((prop) => { delete ret[prop]; });
@@ -30,3 +30,6 @@ schema.options.toJSON.transform = function (doc, ret, options) {
     }
     return ret;
 }
+
+const food = mongoose.model('food', foodSchema);
+module.exports = food;

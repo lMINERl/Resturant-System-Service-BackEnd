@@ -13,7 +13,7 @@ var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
 var restaurantRouter = require('./routes/restaurant');
 var promotionRouter = require('./routes/promotion');
-
+var foodRouter = require('./routes/food');
 var app = express();
 
 app.use(cors()); //use cros
@@ -28,6 +28,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
 app.use('/restaurant', restaurantRouter);
+app.use('/food',foodRouter);
 app.use('/promotion', promotionRouter);
 
 // error display

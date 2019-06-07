@@ -36,7 +36,7 @@ const restaurantSchema = new mongoose.Schema({
         type: String, required: true,
         validate: (input) => validator.isAscii(input) && validator.isLength(input, { max: 30, min: 0 })
     },
-    comments: {
+    comments: { //{userID , comment number}
         type: Array,
         validate: (input) => input.every(v => validator.isMongoId(v))
     },

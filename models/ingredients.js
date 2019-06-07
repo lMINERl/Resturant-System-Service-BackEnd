@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
 const createError = require("http-errors");
 
-const restaurantSchema = new mongoose.Schema({
+const ingredientSchema = new mongoose.Schema({
     name: { type: String }
 }, {
         toJSON: {
@@ -20,3 +20,5 @@ schema.options.toJSON.transform = function (doc, ret, options) {
     }
     return ret;
 }
+const ingredient = mongoose.model('ingredient', ingredientSchema);
+module.exports = ingredient;

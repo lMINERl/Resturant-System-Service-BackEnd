@@ -23,3 +23,5 @@ schema.options.toJSON.transform = function (doc, ret, options) {
     }
     return ret;
 }
+const rule = mongoose.model('rule', ruleSchema);
+module.exports = rule;

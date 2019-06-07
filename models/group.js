@@ -27,3 +27,6 @@ schema.options.toJSON.transform = function (doc, ret, options) {
     }
     return ret;
 }
+
+const group = mongoose.model('group', groupSchema);
+module.exports = group;

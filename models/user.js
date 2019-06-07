@@ -14,7 +14,7 @@ const schema = new mongoose.Schema({
     favouriteResturant: { type: Array }, //contains ids of resturant unbinded
     groups: { type: Array }, //group ids
     ownedGroups: { type: Array }, //id group
-    reviews: { type: Array }, // id of reviews
+    reviews: { type: Array }, // review[ { comment,rating} ]
     loyalityPoints: { type: Number },
     roles: { type: Array }, // allowance rules id
     cart: { type: Array }

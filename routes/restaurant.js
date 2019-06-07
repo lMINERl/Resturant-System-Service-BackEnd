@@ -1,6 +1,7 @@
 const express = require('express');
 const createError = require('http-errors');
 const restaurantModel = require(`../models/restaurant`);
+const foodModel = require('../models/food');
 const restaurantMiddleware = require(`../middleware/middleware-restaurant.js`);
 const router = express.Router();
 // base /resturant
@@ -50,6 +51,7 @@ router.delete('/:_id', async (req, res, next) => {
     const item = await restaurantModel.deleteOne({ _id: req.params._id }).catch(err => createError(400, err));
     res.send(item);
 });
+
 // protect endpoint using authentication middleware
 module.exports = router;
 /* post
