@@ -17,11 +17,23 @@
     "jsonwebtoken": "^8.5.1",
     "mongoose": "^5.4.22",
     "morgan": "~1.9.0",
+    "passport": "^0.4.0",
     "util": "^0.11.1",
     "validator": "^10.11.0"
   },
   "devDependencies": {
     "eslint": "^5.16.0",
     "nodemon": "^1.18.10"
-  }
+  },
+  "description": "Back End Restaurant NodeJS using Express and MongoDB",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/lMINERl/Resturant-System-Service-BackEnd.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/lMINERl/Resturant-System-Service-BackEnd/issues"
+  },
+  "homepage": "https://github.com/lMINERl/Resturant-System-Service-BackEnd#readme"
 }

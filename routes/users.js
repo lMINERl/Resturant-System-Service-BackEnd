@@ -1,35 +1,54 @@
 const express = require('express');
-const createError = require('http-errors');
-const User = require(`../models/user`);
-authenticationMiddleware = require(`../middleware/middleware-user`);
 const router = express.Router();
-// base /users
+const createError = require('http-errors')
+const User = require('../models/user');
+const passport = require('passport')
+const authenticationMiddleware = require('../middleware/authentication');
 
-
-// users/login
-router.post('/login', async (req, res, next) => {
-  const { username, password } = req.body;
-  createError(500, "mis");
-  if (!username || !password) return next(createError(400, 'missing arguments'))
-  const user = await User.findOne({ username });
-  if (!user) return next(createError(401));
-  const isMatch = await user.verifyPassword(password).catch(console.error);
-  if (!isMatch) return next(createError(401));
+/* registration */
+router.post('/register',  async (req, res, next)=>  {
+  try{const user = new User(req.body);
+    await user.save();
+    res.send(user)
+  }
+    catch (err){
+      next(createError(404,err.message));
+    }
+  
+});
+// login
+router.post('/authentication',  async (req, res, next)=>  {
+  try{
+    const {email , password} = req.body;
+    if(!email || !password)
+    {
+      console.log('auth failed');
+    }
+    const user = await User.findOne({email});
+    if(!user) console.log('NOT FOUND');
+  
+  const isMatch = await user.verifyPassword(password);
+  if(!isMatch) console.log('NOT MATCHED');
+  
   const token = await user.generateToken();
-  res.send({ token, user });
-});
-// users/register user 
-router.post('/register', async (req, res, next) => {
-  const { username, password } = req.body;
-  const user = new User({ username, password });
-  user.save((err) => {
-    if (err) return next(createError(400, err));
-    res.send(user);
-  });
+  res.send({
+    token ,
+    user
+  })
+  }
+    catch (err){
+       next(createError(400 , err))
+    }
+  
 });
 
-// protect endpoint login authentication
-router.get('/', authenticationMiddleware, (req, res, next) => {
-  res.send(req.user._id);
+router.use(authenticationMiddleware);
+
+router.get('/profile', (req, res , next) => {
+  const{user}=req;
+  res.send({user})
+  
 });
+
+
 module.exports = router;
