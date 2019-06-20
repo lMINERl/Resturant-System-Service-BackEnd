@@ -7,11 +7,17 @@ const authenticationMiddleware = require('../middleware/authentication');
 
 /* registration */
 router.post('/register',  async (req, res, next)=>  {
-  try{const user = new User(req.body);
-    await user.save();
-    res.send(user)
-  }
-    catch (err){
+    const {name,email,password,joined}= req.body;
+    const newUser = new User({
+        name,
+        email,
+        password,
+        joined
+    });
+    try{
+        const user = await newUser.save();
+        return res.send({user})
+    }catch(e){
       next(createError(404,err.message));
     }
   
