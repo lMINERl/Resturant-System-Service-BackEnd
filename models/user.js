@@ -1,18 +1,8 @@
 const mongoose = require('mongoose');
-const bcrypt = require('bcrypt');
-const jwt = require('jsonwebtoken');
-const saltRounds = process.env.SALT_ROUND || 10;
-const secretKey = process.env.SECRET_KEY || 'mySecretKey';
-const tokenExpire = process.env.TOKEN_EXPIRE || '1h';
-const createError = require('http-errors');
-const {promisify}=require('util');
-const sign = promisify(jwt.sign);
-const verify = promisify(jwt.verify);
-const validator = require('validator');
-
-
-const schema = new mongoose.Schema({
-    username: { type: String },
+const bcrypt = require('bcryptjs')
+const {Schema}=mongoose;
+const userSchema = Schema({
+    name: { type: String },
     password: { type: String },
     email: { type: String },
     favouriteFood: { type: Array }, //contains ids of foods unbinded
@@ -23,44 +13,34 @@ const schema = new mongoose.Schema({
     loyalityPoints: { type: Number },
     roles: { type: Array }, // allowance rules id
     cart: { type: Array }
-},
-    {
-        toJSON: {
-            hidden: ['password', '__v'], //to hide the password and other values from response
-            transform: true,
-        },
-        autoIndex: true
+})
+userSchema.pre('save',async function (next){
+    //check new account or password is modified
+    if(!this.isModified('password')){
+        return next();
     }
-);
-
-// apply the transform hide
-schema.method('verifyPassword', function (password){
-    const user  = this ; 
-   const verify = bcrypt.compare(password , user.password) ;
-   if(verify) {return true }else return false
-
-    
-})
-schema.method('generateToken', function (compPassword){
-    const user  = this ; 
-  return sign({_id : user._id}, secretKey);
-
-    
-})
-schema.static('getUserByToken', async function (token) {
-    const decoded = await verify(token, secretKey);
-    const user = await User.findById(decoded._id);
-    if (!user) throw new Error('user not found');
-    return user;
-});
-const hashPassword = (password)=> bcrypt.hash(password, saltRounds)
-schema.pre('save', async function(){
-    const user = this;
-    if(user.isNew || user.modifiedPaths().includes('password'))
-    {
-       user.password =  await hashPassword(user.password)
+    //encrpt password
+    try{
+        const salt = await bcrypt.genSalt(10);
+        const hash = await bcrypt.hash(this.password,salt);
+        this.password = hash;
+        next();
+    }catch(e){
+        return next(e);
     }
-
 })
-const User = mongoose.model('User', schema);
-module.exports= User;
+userSchema.methods.isPasswordMatch = function(password,hashed,callback){
+    bcrypt.compare(password,hashed,(err,success)=>{
+        if(err){
+            return callback(err);
+        }
+        callback(null,success)
+    });
+}
+userSchema.methods.toJSON =function(){
+    const userObject = this.toObject();
+    delete userObject.password;
+    return userObject;
+}
+const User =mongoose.model('User',userSchema) ;
+module.exports=User;
